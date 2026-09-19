@@ -14,7 +14,7 @@
           IP: {{ ansible_host }} |
           OS: {{ ansible_distribution }} {{ ansible_distribution_version }}
 
-    - name: Generar registro en formato CSV en el workspace
+    - name: Generar registro en formato CSV en la ruta del proyecto local
       delegate_to: localhost
       connection: local
       vars:
@@ -36,9 +36,3 @@
     - name: Imprimir CSV en consola
       ansible.builtin.debug:
         var: csv_output.stdout_lines
-
-    - name: Descargar el archivo CSV de AWX hacia Kali
-      ansible.builtin.fetch:
-        src: "{{ playbook_dir }}/inventario.csv"
-        dest: /home/kali/git-local/escaneo-red-limpio/inventario.csv
-        flat: yes
