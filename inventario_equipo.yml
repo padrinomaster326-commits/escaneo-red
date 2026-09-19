@@ -37,12 +37,8 @@
       ansible.builtin.debug:
         var: csv_output.stdout_lines
 
-    - name: Copiar inventario.csv a la carpeta local de Kali
-      delegate_to: localhost
-      connection: local
-      vars:
-        ansible_shell_type: sh
-      ansible.builtin.copy:
+    - name: Descargar el archivo CSV de AWX hacia Kali
+      ansible.builtin.fetch:
         src: "{{ playbook_dir }}/inventario.csv"
         dest: /home/kali/git-local/escaneo-red-limpio/inventario.csv
-        remote_src: yes
+        flat: yes
