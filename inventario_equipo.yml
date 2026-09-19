@@ -14,13 +14,13 @@
           IP: {{ ansible_host }} |
           OS: {{ ansible_distribution }} {{ ansible_distribution_version }}
 
-    - name: Generar registro en formato CSV en la ruta del proyecto local
+    - name: Generar registro CSV directamente en /resultados
       delegate_to: localhost
       connection: local
       vars:
         ansible_shell_type: sh
       ansible.builtin.lineinfile:
-        path: "{{ playbook_dir }}/inventario.csv"
+        path: /resultados/inventario.csv
         line: "{{ ansible_hostname }},{{ ansible_product_serial | default('N/A') }},{{ ansible_user_id | default('N/A') }},{{ ansible_host }},{{ ansible_distribution }} {{ ansible_distribution_version }}"
         create: yes
         insertafter: EOF
@@ -30,7 +30,7 @@
       connection: local
       vars:
         ansible_shell_type: sh
-      ansible.builtin.command: cat "{{ playbook_dir }}/inventario.csv"
+      ansible.builtin.command: cat /resultados/inventario.csv
       register: csv_output
 
     - name: Imprimir CSV en consola
