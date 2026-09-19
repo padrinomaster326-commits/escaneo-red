@@ -14,9 +14,11 @@
           IP: {{ ansible_host }} |
           OS: {{ ansible_distribution }} {{ ansible_distribution_version }}
 
-    - name: Generar registro CSV directamente en /resultados
+    - name: Generar registro CSV directamente en /resultados con sudo
       delegate_to: localhost
       connection: local
+      become: true
+      become_method: sudo
       vars:
         ansible_shell_type: sh
       ansible.builtin.lineinfile:
@@ -28,6 +30,7 @@
     - name: Mostrar contenido del archivo CSV generado
       delegate_to: localhost
       connection: local
+      become: true
       vars:
         ansible_shell_type: sh
       ansible.builtin.command: cat /resultados/inventario.csv
