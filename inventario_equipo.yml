@@ -1,4 +1,3 @@
----
 - name: Recopilar informacion del sistema y generar CSV
   hosts: all
   gather_facts: true
@@ -37,3 +36,13 @@
     - name: Imprimir CSV en consola
       ansible.builtin.debug:
         var: csv_output.stdout_lines
+
+    - name: Copiar inventario.csv a la carpeta local de Kali
+      delegate_to: localhost
+      connection: local
+      vars:
+        ansible_shell_type: sh
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/inventario.csv"
+        dest: /home/kali/git-local/escaneo-red-limpio/inventario.csv
+        remote_src: yes
