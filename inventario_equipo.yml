@@ -14,15 +14,13 @@
           IP: {{ ansible_host }} |
           OS: {{ ansible_distribution }} {{ ansible_distribution_version }}
 
-    - name: Generar registro CSV directamente en /resultados con sudo
+    - name: Generar registro en formato CSV en el workspace seguro
       delegate_to: localhost
       connection: local
-      become: true
-      become_method: sudo
       vars:
         ansible_shell_type: sh
       ansible.builtin.lineinfile:
-        path: /resultados/inventario.csv
+        path: "{{ playbook_dir }}/inventario.csv"
         line: "{{ ansible_hostname }},{{ ansible_product_serial | default('N/A') }},{{ ansible_user_id | default('N/A') }},{{ ansible_host }},{{ ansible_distribution }} {{ ansible_distribution_version }}"
         create: yes
         insertafter: EOF
@@ -30,12 +28,11 @@
     - name: Mostrar contenido del archivo CSV generado
       delegate_to: localhost
       connection: local
-      become: true
       vars:
         ansible_shell_type: sh
-      ansible.builtin.command: cat /resultados/inventario.csv
+      ansible.builtin.command: cat "{{ playbook_dir }}/inventario.csv"
       register: csv_output
 
-    - name: Imprimir CSV en consola
+    - name: Imprimir CSV en consola de AWX
       ansible.builtin.debug:
         var: csv_output.stdout_lines
